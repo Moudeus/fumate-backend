@@ -3,4 +3,5 @@ import { IUser } from '../modules/users/user.model';
 
 export interface AuthenticatedRequest extends Request {
   user?: IUser;
+  userId?: string;
 }

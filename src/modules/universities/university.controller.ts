@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 import { ApiResponseWrapper } from "../../interfaces/ApiResponseWrapper";
 import UniversityService from "./university.service";
-import { AuthenticatedRequest } from "../../interfaces/AuthenticatedRequest";
 
 export class UniversityController {
   // Get all universities with pagination, search, and major filtering
@@ -218,7 +217,7 @@ export class UniversityController {
   }
 
   // Add university to favorites
-  static async addToFavorites(req: AuthenticatedRequest, res: Response) {
+  static async addToFavorites(req: Request, res: Response) {
     try {
       const { universityId } = req.params;
       const userId = req.user?.id;
@@ -247,7 +246,7 @@ export class UniversityController {
   }
 
   // Remove university from favorites
-  static async removeFromFavorites(req: AuthenticatedRequest, res: Response) {
+  static async removeFromFavorites(req: Request, res: Response) {
     try {
       const { universityId } = req.params;
       const userId = req.user?.id;
@@ -273,7 +272,7 @@ export class UniversityController {
   }
 
   // Get user's favorite universities
-  static async getFavorites(req: AuthenticatedRequest, res: Response) {
+  static async getFavorites(req: Request, res: Response) {
     try {
       const userId = req.user?.id;
       const { page = 1, limit = 10, search } = req.query;
@@ -310,7 +309,7 @@ export class UniversityController {
   }
 
   // Check if university is favorite
-  static async checkFavorite(req: AuthenticatedRequest, res: Response) {
+  static async checkFavorite(req: Request, res: Response) {
     try {
       const { universityId } = req.params;
       const userId = req.user?.id;
