@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import { ApiResponseWrapper } from "../interfaces/ApiResponseWrapper";
 
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error("Error:", err);
 
   // Mongoose validation error
   if (err.name === "ValidationError") {
