@@ -16,7 +16,8 @@ export class AuthService {
       return { status: 0, message: "Tài khoản đã bị khóa" };
     }
 
-    if (!user.isVerified) {
+    // Skip email verification check in production (auto-verified)
+    if (process.env.NODE_ENV !== 'production' && !user.isVerified) {
       return { status: 0, message: "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực tài khoản." };
     }
 
@@ -81,24 +82,25 @@ export class AuthService {
       firstName,
       lastName,
       role: "user",
-      isVerified: false,
+      isVerified: true, // Auto-verify for production (SMTP blocked on free tier)
       verificationOTP: otp,
       verificationOTPExpires: otpExpires,
     });
 
     await user.save();
 
-    // Send OTP via email
-    try {
-      await MailService.sendOTPToken(email, otp);
-    } catch (error) {
-      console.error("Failed to send OTP email:", error);
-      // Continue with registration even if email fails
+    // Skip email sending on production (SMTP blocked on Render free tier)
+    if (process.env.NODE_ENV !== 'production') {
+      try {
+        await MailService.sendOTPToken(email, otp);
+      } catch (error) {
+        console.error("Failed to send OTP email:", error);
+      }
     }
 
     return { 
       status: 1, 
-      message: "Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản.",
+      message: "Đăng ký thành công. Bạn có thể đăng nhập ngay.",
       email: email.toLowerCase()
     };
   }
